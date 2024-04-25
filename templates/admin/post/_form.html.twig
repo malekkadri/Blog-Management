@@ -1,0 +1,28 @@
+{{ form_start(form) }}
+    <div class="row">
+        <div class="col-md-6">
+            {{ form_row(form.title_en) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(form.title_hr) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(form.published_at) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(form.image) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(form.content_en) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(form.content_hr) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(form.tags) }}
+        </div>
+    </div>
+    <button class="btn btn-primary">
+        {% trans %}Save{% endtrans %}
+    </button>
+{{ form_end(form) }}

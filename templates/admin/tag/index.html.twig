@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Category management{% endtrans %}{% endblock %}
+
+{% block body %}
+    <h1 class="mb-3">{% trans %}Category management{% endtrans %}</h1>
+
+    {% include 'partials/_flash_messages.html.twig' %}
+
+    <a href="{{ path('app_tag_new') }}" class="btn btn-primary">
+        {% trans %}Create new{% endtrans %}
+    </a>
+
+    <div class="table-responsive">
+        <table class="table table-striped mt-3">
+            <thead>
+            <tr>
+                <th class="text-nowrap">ID</th>
+                <th class="text-nowrap">{% trans %}Name{% endtrans %}</th>
+                <th class="text-nowrap">{% trans %}Created by{% endtrans %}</th>
+                <th class="text-nowrap">{% trans %}Created At{% endtrans %}</th>
+                <th class="text-nowrap">{% trans %}Actions{% endtrans %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for tag in pagination %}
+                <tr>
+                    <td class="text-nowrap">{{ tag.id }}</td>
+                    <td class="text-nowrap">{{ tag.translations[0].name }}</td>
+                    <td class="text-nowrap">{{ tag.user.name }}</td>
+                    <td class="text-nowrap">{{ tag.createdAt|date('Y-m-d H:i:s') }}</td>
+                    <td class="d-flex align-items-center gap-2">
+                        <a href="{{ path('app_tag_show', {'id': tag.id}) }}" class="btn btn-primary btn-sm">
+                            {% trans %}Show{% endtrans %}
+                        </a>
+                        <a href="{{ path('app_tag_edit', {'id': tag.id}) }}" class="btn btn-warning btn-sm">
+                            {% trans %}Edit{% endtrans %}
+                        </a>
+                        <form action="{{ path('app_tag_delete', {'id': tag.id}) }}" method="POST" onsubmit="return confirm('{% trans %}Are you sure?{% endtrans %}')">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ tag.id) }}">
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                {% trans %}Delete{% endtrans %}
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">{% trans %}No records found{% endtrans %}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="navigation d-flex justify-content-end">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+{% endblock %}

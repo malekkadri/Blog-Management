@@ -1,0 +1,13 @@
+{{ form_start(form) }}
+    <div class="row">
+        <div class="col-md-6">
+            {{ form_row(form.name_en) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(form.name_hr) }}
+        </div>
+    </div>
+    <button class="btn btn-primary">
+        {% trans %}Save{% endtrans %}
+    </button>
+{{ form_end(form) }}

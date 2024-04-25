@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block body %}
+    <div class="container">
+        {% include 'partials/_flash_messages.html.twig' %}
+
+        <h1>{% trans %}Edit Profile{% endtrans %}</h1>
+
+        <div>
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <div class="d-flex align-items-center gap-3">
+                <button type="submit" class="btn btn-primary">
+                    {% trans %}Save{% endtrans %}
+                </button>
+                <a href="{{ path('app_profile') }}" class="btn btn-secondary">
+                    {% trans %}Back to profile{% endtrans %}
+                </a>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

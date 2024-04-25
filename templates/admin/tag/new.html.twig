@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Create Tag{% endtrans %}{% endblock %}
+
+{% block body %}
+    <h1>{% trans %}Create Tag{% endtrans %}</h1>
+
+    {{ include('admin/tag/_form.html.twig') }}
+
+    <a href="{{ path('app_tag_index') }}" class="btn btn-secondary mt-3">
+        {% trans %}Back to list{% endtrans %}
+    </a>
+{% endblock %}

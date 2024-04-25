@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}User Details{% endtrans %}{% endblock %}
+
+{% set role_mapping = {
+    'ROLE_ADMIN': 'Administrator',
+    'ROLE_USER': 'User',
+} %}
+
+{% block body %}
+    <h1>{% trans %}User Details{% endtrans %}</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ user.id }}</td>
+            </tr>
+            <tr>
+                <th>{% trans %}Name{% endtrans %}</th>
+                <td>{{ user.name }}</td>
+            </tr>
+            <tr>
+                <th>{% trans %}Email{% endtrans %}</th>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <th>{% trans %}Roles{% endtrans %}</th>
+                {% set readable_roles = user.roles ? user.roles|map(role => role_mapping[role] ?? role)|join(', ') : '' %}
+                <td>{{ readable_roles }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="d-flex gap-2">
+        <a href="{{ path('app_user_index') }}" class="btn btn-secondary">
+            {% trans %}Back to list{% endtrans %}
+        </a>
+
+        <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-warning">
+            {% trans %}Edit{% endtrans %}
+        </a>
+
+        {{ include('admin/user/_delete_form.html.twig') }}
+    </div>
+{% endblock %}

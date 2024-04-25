@@ -1,0 +1,104 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User Profile{% endblock %}
+
+{% block body %}
+    <div class="container">
+        {% include 'partials/_flash_messages.html.twig' %}
+
+        <h1>{% trans %}User Profile{% endtrans %}</h1>
+
+        <table class="table">
+            <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ user.id }}</td>
+            </tr>
+            <tr>
+                <th>{% trans %}Name{% endtrans %}</th>
+                <td>{{ user.name }}</td>
+            </tr>
+            <tr>
+                <th>{% trans %}Email{% endtrans %}</th>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <th>{% trans %}Roles{% endtrans %}</th>
+                {% set readable_roles = user.roles ? user.roles|map(role => role_mapping[role] ?? role)|join(', ') : '' %}
+                <td>{{ readable_roles }}</td>
+            </tr>
+            <tr>
+                <th>{% trans %}Avatar{% endtrans %}</th>
+                <td>
+                    <img src="{{ user.avatarUrl }}" alt="{{ user.name }}" style="width: 100px; height: 100px; object-fit: cover">
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <a href="{{ path('app_profile_edit') }}" class="btn btn-warning mt-2">
+            {% trans %}Edit Profile{% endtrans %}
+        </a>
+
+        {% if user.favoritePosts|length > 0 %}
+            <div class="mt-4">
+                <h4>{% trans %}Favorites{% endtrans %}</h4>
+                <ul class="list-group">
+                    {% for post in user.favoritePosts %}
+                        <a href="{{ path('app_post', {slug: post.translations[0].slug}) }}" class="list-group-item list-group-item-action">
+                            <div class="d-flex align-items-center justify-content-between gap-3">
+                                <div class="d-flex align-items-center gap-3">
+                                    <img src="{{ post.imageUrl }}" alt="{{ post.translations[0].title }}" style="width: 60px; height: 40px; object-fit: cover">
+                                    <p class="mb-0">{{ post.translations[0].title }}</p>
+                                </div>
+                                <p class="mb-0 text-muted" style="font-size: 0.8rem">
+                                    {% trans %}Published At{% endtrans %}: {{ post.publishedAt|date('d.m.Y') }}
+                                </p>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        {% if user.likedPosts|length > 0 %}
+            <div class="mt-4">
+                <h4>{% trans %}Liked posts{% endtrans %}</h4>
+                <ul class="list-group">
+                    {% for post in user.likedPosts %}
+                        <a href="{{ path('app_post', {slug: post.translations[0].slug}) }}" class="list-group-item list-group-item-action">
+                            <div class="d-flex align-items-center justify-content-between gap-3">
+                                <div class="d-flex align-items-center gap-3">
+                                    <img src="{{ post.imageUrl }}" alt="{{ post.translations[0].title }}" style="width: 60px; height: 40px; object-fit: cover">
+                                    <p class="mb-0">{{ post.translations[0].title }}</p>
+                                </div>
+                                <p class="mb-0 text-muted" style="font-size: 0.8rem">
+                                    {% trans %}Published At{% endtrans %}: {{ post.publishedAt|date('d.m.Y') }}
+                                </p>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        {% if user.comments|length > 0 %}
+            <div class="mt-4">
+                <h4>{% trans %}Comments{% endtrans %}</h4>
+                <ul class="list-group">
+                    {% for comment in user.comments %}
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between mb-2" style="font-size: 0.8rem">
+                                <p class="mb-0">{% trans %}Author{% endtrans %}: {{ comment.author.name }}</p>
+                                <p class="mb-0 text-muted">
+                                    {% trans %}Created At{% endtrans %}: {{ comment.createdAt|date('d.m.Y H:i:s') }}
+                                </p>
+                            </div>
+                            <p class="mb-0" style="white-space: pre-wrap">{{ comment.text }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

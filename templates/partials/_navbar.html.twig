@@ -1,0 +1,95 @@
+<nav class="navbar bg-dark fixed-top navbar-expand-lg" data-bs-theme="dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{ path('app_home') }}"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{{ path('app_home') }}">
+                        {% trans %}Home{% endtrans %}
+                    </a>
+                </li>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                           aria-expanded="false">
+                            {% trans %}Administration{% endtrans %}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" data-bs-theme="light">
+                            <li>
+                                <a class="dropdown-item" href="{{ path('app_user_index') }}">
+                                    {% trans %}Users{% endtrans %}
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ path('app_tag_index') }}">
+                                    {% trans %}Category{% endtrans %}
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ path('app_post_index') }}">
+                                    {% trans %}Posts{% endtrans %}
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                {# {% endif %} #}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                        {% trans %}Language{% endtrans %}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" data-bs-theme="light">
+                        <li>
+                            <a class="dropdown-item" href="/en">
+                                {% trans %}English{% endtrans %}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="/hr">
+                                {% trans %}French{% endtrans %}
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                           aria-expanded="false">
+                           
+                            
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" data-bs-theme="light">
+                            <li>
+                                <a class="dropdown-item" href="{{ path('app_profile') }}">
+                                    {% trans %}Profile{% endtrans %}
+                                </a>
+                            </li>
+                            <li>
+                                <form action="{{ path('app_logout') }}" method="POST">
+                                    <button class="dropdown-item" type="submit">
+                                        {% trans %}Logout{% endtrans %}
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_login') }}">
+                            {% trans %}Login{% endtrans %}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_register') }}">
+                            {% trans %}Register{% endtrans %}
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

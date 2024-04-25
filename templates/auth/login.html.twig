@@ -1,0 +1,53 @@
+{% extends './auth-base.html.twig' %}
+
+{% block title %}{% trans %}Login{% endtrans %}{% endblock %}
+
+{% block body %}
+    <div class="min-vh-100 p-4 d-flex flex-column align-items-center justify-content-center bg-primary-subtle">
+        <div class="card shadow-sm max-w-100" style="width: 400px">
+            <div class="card-body">
+                <h2 class="text-center mb-3">
+                    {% trans %}Login{% endtrans %}
+                </h2>
+
+                {% if error %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error.messageKey|trans(error.messageData, 'security') }}
+                    </div>
+                {% endif %}
+
+                <form action="{{ path('app_login') }}" method="post">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">{% trans %}Email{% endtrans %}:</label>
+                        <input type="email" class="form-control" id="username" name="_username" value="{{ last_username }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">{% trans %}Password{% endtrans %}:</label>
+                        <input type="password" class="form-control" id="password" name="_password" required>
+                    </div>
+
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="remember_me" name="_remember_me">
+                        <label class="form-check-label" for="remember_me">
+                            {% trans %}Keep me logged in{% endtrans %}
+                        </label>
+                    </div>
+
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                    <button type="submit" class="btn btn-primary">
+                        {% trans %}Login{% endtrans %}
+                    </button>
+                </form>
+
+                <a href="{{ path('app_register') }}" class="d-block mt-4 text-center">
+                    {% trans %}Don't have an account? Register{% endtrans %}
+                </a>
+            </div>
+        </div>
+        <a href="{{ path('app_home') }}" class="d-block mt-3 text-center">
+            {% trans %}Go back home{% endtrans %}
+        </a>
+    </div>
+{% endblock %}

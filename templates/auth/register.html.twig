@@ -1,0 +1,34 @@
+{% extends './auth-base.html.twig' %}
+
+{% block title %}{% trans %}Register{% endtrans %}{% endblock %}
+
+{% block body %}
+    <div class="min-vh-100 p-4 d-flex flex-column align-items-center justify-content-center bg-primary-subtle">
+        <div class="card shadow-sm max-w-100" style="width: 400px">
+            <div class="card-body">
+                <h2 class="text-center mb-3">
+                    {% trans %}Register{% endtrans %}
+                </h2>
+
+                {{ form_start(registrationForm) }}
+
+                {{ form_row(registrationForm.name) }}
+                {{ form_row(registrationForm.email) }}
+                {{ form_row(registrationForm.plainPassword) }}
+                {{ form_row(registrationForm.agreeTerms) }}
+
+                <button type="submit" class="btn btn-primary">
+                    {% trans %}Register{% endtrans %}
+                </button>
+                {{ form_end(registrationForm) }}
+
+                <a href="{{ path('app_login') }}" class="d-block mt-4 text-center">
+                    {% trans %}Already have an account? Login{% endtrans %}
+                </a>
+            </div>
+        </div>
+        <a href="{{ path('app_home') }}" class="d-block mt-3 text-center">
+            {% trans %}Go back home{% endtrans %}
+        </a>
+    </div>
+{% endblock %}

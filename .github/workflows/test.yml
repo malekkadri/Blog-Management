@@ -1,0 +1,55 @@
+name: Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: testing_test
+        ports:
+          - 3306/tcp
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cache Composer packages
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, mysql
+          coverage: none
+
+      - name: Start MySQL
+        run: sudo service mysql start
+
+      - name: Prepare test database
+        run: composer prepare-test-db
+        env:
+          DATABASE_URL: mysql://root:password@127.0.0.1:${{ job.services.mysql.ports['3306'] }}/testing?serverVersion=8&charset=utf8mb4
+
+      - name: Run tests
+        run: php bin/phpunit
+        env:
+          DATABASE_URL: mysql://root:password@127.0.0.1:${{ job.services.mysql.ports['3306'] }}/testing?serverVersion=8&charset=utf8mb4

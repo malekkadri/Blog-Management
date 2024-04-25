@@ -1,0 +1,116 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ post.translations[0].title }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        {% include 'partials/_flash_messages.html.twig' %}
+
+        <h1 class="mb-4">{{ post.translations[0].title }}</h1>
+
+        <img src="{{ post.imageUrl }}" class="w-100 mb-4" alt="{{ post.translations[0].title }}">
+
+        <div class="d-flex align-items-center justify-content-between">
+            <p class="text-muted post-published">
+                {% trans %}Published At{% endtrans %}: {{ post.publishedAt|date('d.m.Y') }}
+            </p>
+            <p class="text-muted post-author">
+                {% trans %}Author{% endtrans %}: {{ post.author.name }}
+            </p>
+        </div>
+
+        {% if post.tags|length > 0 %}
+            <div class="d-flex align-items-center gap-2 mb-3">
+                {% for tag in post.tags %}
+                    <span class="badge bg-primary">
+                        {{ tag.translations[0].name }}
+                    </span>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <p class="text-muted mb-0 likes-count">Likes: {{ likesCount }}</p>
+
+            {% if is_granted('IS_AUTHENTICATED') %}
+                <div class="d-flex align-items-center gap-3 post-actions">
+                    {% if post.likes|length > 0 %}
+                        <form action="{{ path('app_post_unlike', {'id': post.id}) }}" method="post">
+                            <input type="hidden" name="_token" value="{{ csrf_token('unlike' ~ post.id) }}"/>
+                            <button type="submit" class="btn btn-warning">
+                                {% trans %}Unlike post{% endtrans %}
+                            </button>
+                        </form>
+                    {% else %}
+                        <form action="{{ path('app_post_like', {'id': post.id}) }}" method="post">
+                            <input type="hidden" name="_token" value="{{ csrf_token('like' ~ post.id) }}"/>
+                            <button type="submit" class="btn btn-success">
+                                {% trans %}Like post{% endtrans %}
+                            </button>
+                        </form>
+                    {% endif %}
+
+                    {% if post.favorites|length > 0 %}
+                        <form action="{{ path('app_post_remove_favorite', {'id': post.id}) }}" method="post" class="remove-from-favorites-form">
+                            <input type="hidden" name="_token" value="{{ csrf_token('remove_favorite' ~ post.id) }}"/>
+                            <button type="submit" class="btn btn-warning">
+                                {% trans %}Remove from favorites{% endtrans %}
+                            </button>
+                        </form>
+                    {% else %}
+                        <form action="{{ path('app_post_add_favorite', {'id': post.id}) }}" method="post" class="add-to-favorites-form">
+                            <input type="hidden" name="_token" value="{{ csrf_token('add_favorite' ~ post.id) }}"/>
+                            <button type="submit" class="btn btn-success">
+                                {% trans %}Add to favorites{% endtrans %}
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+        <p class="post-content" style="white-space: pre-wrap">{{ post.translations[0].content }}</p>
+
+        {% if is_granted('IS_AUTHENTICATED') %}
+            <div class="mt-4 comment-form">
+                {{ form_start(form) }}
+                    {{ form_widget(form) }}
+                    <button type="submit" class="btn btn-primary">
+                        {% trans %}Submit Comment{% endtrans %}
+                    </button>
+                {{ form_end(form) }}
+            </div>
+        {% endif %}
+
+        {% if post.comments|length > 0 %}
+            <h4 class="mt-4">{% trans %}Comments{% endtrans %}</h4>
+            <ul class="list-group">
+                {% for comment in post.comments %}
+                    <li class="list-group-item">
+                        <div class="d-flex justify-content-between mb-2" style="font-size: 0.8rem">
+                            <div class="d-flex align-items-center">
+                                <img src="{{ comment.author.avatarUrl }}" class="avatar-img" alt="{{ comment.author.name }}">
+                                <p class="mb-0">{% trans %}Author{% endtrans %}: {{ comment.author.name }}</p>
+                            </div>
+                            <p class="mb-0 text-muted">
+                                {% trans %}Created At{% endtrans %}: {{ comment.createdAt|date('d.m.Y H:i:s') }}
+                            </p>
+                        </div>
+                        <p class="mb-0" style="white-space: pre-wrap">{{ comment.text }}</p>
+                        
+                            <form action="{{ path('app_comment_delete', {'id': comment.id}) }}"
+                                  method="post"
+                                  onsubmit="return confirm('{% trans %}Are you sure you want to delete this comment?{% endtrans %}');"
+                            >
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comment.id) }}"/>
+                                <button type="submit" class="btn btn-danger btn-sm my-2">
+                                    {% trans %}Delete{% endtrans %}
+                                </button>
+                            </form>
+                       
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,15 @@
+<h3>Hello {{ post.author.name }}!</h3>
+
+<p>A new comment was made by {{ comment.author.name }} on the post "{{ post.translations[0].title }}":</p>
+
+<p>"{{ comment.text }}"<p>
+
+<p>
+    You can view the post and the comment
+    <a href="{{ url('app_post', {'_locale': locale, 'slug': post.translations[0].slug}) }}">here</a>.
+</p>
+
+<p>
+    Best Regards,<br>
+    The DemoBlog Team
+</p>

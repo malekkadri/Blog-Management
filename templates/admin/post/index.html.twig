@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Posts management{% endtrans %}{% endblock %}
+
+{% block body %}
+    <h1 class="mb-3">{% trans %}Posts management{% endtrans %}</h1>
+
+    {% include 'partials/_flash_messages.html.twig' %}
+
+    <a href="{{ path('app_post_new') }}" class="btn btn-primary">
+        {% trans %}Create new{% endtrans %}
+    </a>
+
+    <div class="table-responsive">
+        <table class="table table-striped mt-3">
+            <thead>
+            <tr>
+                <th class="text-nowrap">ID</th>
+                <th class="text-nowrap">{% trans %}Image{% endtrans %}</th>
+                <th class="text-nowrap">{% trans %}Title{% endtrans %}</th>
+                <th class="text-nowrap">{% trans %}Published At{% endtrans %}</th>
+                <th class="text-nowrap">{% trans %}Tags{% endtrans %}</th>
+                <th class="text-nowrap">{% trans %}Created by{% endtrans %}</th>
+                <th class="text-nowrap">{% trans %}Created At{% endtrans %}</th>
+                <th class="text-nowrap">{% trans %}Actions{% endtrans %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for post in pagination %}
+                <tr>
+                    <td class="text-nowrap">{{ post.id }}</td>
+                    <td class="text-nowrap">
+                        <img src="{{ post.imageUrl }}" alt="Post image" style="height: 2rem">
+                    </td>
+                    <td class="text-nowrap">{{ post.translations[0].title }}</td>
+                    <td class="text-nowrap">{{ post.publishedAt|date('Y-m-d') }}</td>
+                    <td>
+                        {% for tag in post.tags %}
+                            <a href="{{ path('app_tag_show', {'id': tag.id}) }}" class="badge bg-primary mr-1 text-decoration-none">
+                                {{ tag.translations[0].name }}
+                            </a>
+                        {% else %}
+                            <span>-</span>
+                        {% endfor %}
+                    </td>
+                    <td class="text-nowrap">{{ post.author.name }}</td>
+                    <td class="text-nowrap">{{ post.createdAt|date('Y-m-d H:i:s') }}</td>
+                    <td class="text-nowrap align-middle">
+                        <div class="d-flex align-items-center gap-2">
+                            <a href="{{ path('app_post_show', {'id': post.id}) }}" class="btn btn-primary btn-sm">
+                                {% trans %}Show{% endtrans %}
+                            </a>
+                            <a href="{{ path('app_post_edit', {'id': post.id}) }}" class="btn btn-warning btn-sm">
+                                {% trans %}Edit{% endtrans %}
+                            </a>
+                            <form action="{{ path('app_post_delete', {'id': post.id}) }}" method="POST" onsubmit="return confirm('{% trans %}Are you sure?{% endtrans %}')">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    {% trans %}Delete{% endtrans %}
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">{% trans %}No records found{% endtrans %}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="navigation d-flex justify-content-end">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+{% endblock %}
